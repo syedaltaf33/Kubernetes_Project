@@ -1,13 +1,14 @@
-# Use the official CentOS base image
-FROM centos:latest
+# Use the official Ubuntu base image
+FROM ubuntu:latest
 
 # Set the maintainer label
 LABEL maintainer="syedaltaf"
 
-# Install Apache, unzip, and zip using yum
-RUN yum -y update && \
-    yum -y install httpd zip unzip && \
-    yum clean all
+# Update the package list and install Apache, zip, and unzip
+RUN apt-get update && \
+    apt-get install -y apache2 zip unzip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Download and unzip the website files
 ADD https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip /var/www/html/
@@ -20,7 +21,8 @@ RUN unzip photogenic.zip && \
 EXPOSE 80 22
 
 # Start the Apache HTTP Server in the foreground
-CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+CMD ["apache2ctl", "-D", "FOREGROUND"]
+
 
 
 # FROM  centos:latest
